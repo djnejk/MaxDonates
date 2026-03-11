@@ -36,6 +36,8 @@ Minecraft (Paper 1.20+) plugin pro posilani donatu mezi hraci a firmami pres Vau
 - `/maxdonates crecived <firma> [stranka]`
 
 ## Permission nodes
+> Vsechny permission nodes jsou ve `plugin.yml` nastavene na `default: false` (krome `maxdonates.*` a `maxdonates.company.create.*` pro OP).
+
 - `maxdonates.donate.player`
 - `maxdonates.donate.company`
 - `maxdonates.company.create`
