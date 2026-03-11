@@ -1,0 +1,13 @@
+name: MaxDonates
+version: 1.0
+main: com.djnejk.maxdonates.MaxDonates
+api-version: 1.20
+author: djnejk
+description: Donate system plugin
+
+depend: [Vault]
+
+commands:
+  test:
+    description: Ukaze tvuj balance
+    usage: /test
