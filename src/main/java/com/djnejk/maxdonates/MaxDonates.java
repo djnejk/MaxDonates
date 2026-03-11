@@ -2,6 +2,8 @@ package com.djnejk.maxdonates;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.PluginCommand;
+
+import java.io.File;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,7 +16,10 @@ public final class MaxDonates extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        saveResource("lang_cz.yml", false);
+        File langFile = new File(getDataFolder(), "lang_cz.yml");
+        if (!langFile.exists()) {
+            saveResource("lang_cz.yml", false);
+        }
         this.lang = new Lang(this, "lang_cz.yml");
 
         if (!setupEconomy()) {

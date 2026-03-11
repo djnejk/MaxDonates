@@ -74,8 +74,27 @@ public class DatabaseManager {
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """);
 
-        execute("ALTER TABLE md_donations_player ADD COLUMN IF NOT EXISTS notified TINYINT(1) NOT NULL DEFAULT 0;");
-        execute("ALTER TABLE md_donations_company ADD COLUMN IF NOT EXISTS notified TINYINT(1) NOT NULL DEFAULT 0;");
+        ensureColumnExists("md_donations_player", "notified", "TINYINT(1) NOT NULL DEFAULT 0");
+        ensureColumnExists("md_donations_company", "notified", "TINYINT(1) NOT NULL DEFAULT 0");
+    }
+
+    private void ensureColumnExists(String table, String column, String definition) throws SQLException {
+        if (columnExists(table, column)) {
+            return;
+        }
+        execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + definition);
+    }
+
+    private boolean columnExists(String table, String column) throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        try (ResultSet rs = metaData.getColumns(connection.getCatalog(), null, table, column)) {
+            if (rs.next()) {
+                return true;
+            }
+        }
+        try (ResultSet rs = metaData.getColumns(connection.getCatalog(), null, table.toUpperCase(), column)) {
+            return rs.next();
+        }
     }
 
     private void execute(String sql) throws SQLException {
