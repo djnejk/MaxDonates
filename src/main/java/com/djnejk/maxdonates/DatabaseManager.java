@@ -53,6 +53,7 @@ public class DatabaseManager {
                   donor_uuid VARCHAR(36) NOT NULL,
                   recipient_uuid VARCHAR(36) NOT NULL,
                   amount DOUBLE NOT NULL,
+                  notified TINYINT(1) NOT NULL DEFAULT 0,
                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                   INDEX idx_recipient_created (recipient_uuid, created_at)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -65,12 +66,16 @@ public class DatabaseManager {
                   company_id INT NOT NULL,
                   owner_uuid VARCHAR(36) NOT NULL,
                   amount DOUBLE NOT NULL,
+                  notified TINYINT(1) NOT NULL DEFAULT 0,
                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                   INDEX idx_company_created (company_id, created_at),
                   INDEX idx_owner_created (owner_uuid, created_at),
                   CONSTRAINT fk_md_company FOREIGN KEY (company_id) REFERENCES md_companies(id) ON DELETE CASCADE
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """);
+
+        execute("ALTER TABLE md_donations_player ADD COLUMN IF NOT EXISTS notified TINYINT(1) NOT NULL DEFAULT 0;");
+        execute("ALTER TABLE md_donations_company ADD COLUMN IF NOT EXISTS notified TINYINT(1) NOT NULL DEFAULT 0;");
     }
 
     private void execute(String sql) throws SQLException {
@@ -169,23 +174,82 @@ public class DatabaseManager {
         }
     }
 
-    public void addPlayerDonation(UUID donor, UUID recipient, double amount) throws SQLException {
-        String sql = "INSERT INTO md_donations_player(donor_uuid, recipient_uuid, amount) VALUES(?,?,?)";
+    public void addPlayerDonation(UUID donor, UUID recipient, double amount, boolean notified) throws SQLException {
+        String sql = "INSERT INTO md_donations_player(donor_uuid, recipient_uuid, amount, notified) VALUES(?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, donor.toString());
             ps.setString(2, recipient.toString());
             ps.setDouble(3, amount);
+            ps.setBoolean(4, notified);
             ps.executeUpdate();
         }
     }
 
-    public void addCompanyDonation(UUID donor, int companyId, UUID owner, double amount) throws SQLException {
-        String sql = "INSERT INTO md_donations_company(donor_uuid, company_id, owner_uuid, amount) VALUES(?,?,?,?)";
+    public void addCompanyDonation(UUID donor, int companyId, UUID owner, double amount, boolean notified) throws SQLException {
+        String sql = "INSERT INTO md_donations_company(donor_uuid, company_id, owner_uuid, amount, notified) VALUES(?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, donor.toString());
             ps.setInt(2, companyId);
             ps.setString(3, owner.toString());
             ps.setDouble(4, amount);
+            ps.setBoolean(5, notified);
+            ps.executeUpdate();
+        }
+    }
+
+    public List<PendingDonation> getPendingPlayerDonations(UUID recipient) throws SQLException {
+        String sql = "SELECT id, donor_uuid, amount FROM md_donations_player WHERE recipient_uuid=? AND notified=0 ORDER BY created_at ASC";
+        List<PendingDonation> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, recipient.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new PendingDonation(rs.getLong("id"), UUID.fromString(rs.getString("donor_uuid")), rs.getDouble("amount"), null));
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<PendingDonation> getPendingCompanyDonations(UUID owner) throws SQLException {
+        String sql = "SELECT d.id, d.donor_uuid, d.amount, c.name AS company_name " +
+                "FROM md_donations_company d " +
+                "JOIN md_companies c ON c.id = d.company_id " +
+                "WHERE d.owner_uuid=? AND d.notified=0 ORDER BY d.created_at ASC";
+        List<PendingDonation> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, owner.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new PendingDonation(rs.getLong("id"), UUID.fromString(rs.getString("donor_uuid")), rs.getDouble("amount"), rs.getString("company_name")));
+                }
+            }
+        }
+        return list;
+    }
+
+    public void markPlayerDonationsNotified(List<Long> ids) throws SQLException {
+        markNotified("md_donations_player", ids);
+    }
+
+    public void markCompanyDonationsNotified(List<Long> ids) throws SQLException {
+        markNotified("md_donations_company", ids);
+    }
+
+    private void markNotified(String table, List<Long> ids) throws SQLException {
+        if (ids.isEmpty()) return;
+        StringBuilder sql = new StringBuilder("UPDATE ").append(table).append(" SET notified=1 WHERE id IN (");
+        for (int i = 0; i < ids.size(); i++) {
+            if (i > 0) sql.append(',');
+            sql.append('?');
+        }
+        sql.append(')');
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int i = 1;
+            for (Long id : ids) {
+                ps.setLong(i++, id);
+            }
             ps.executeUpdate();
         }
     }
@@ -267,5 +331,8 @@ public class DatabaseManager {
     }
 
     public record Stats(double total, double day, double week, double month, double year) {
+    }
+
+    public record PendingDonation(long id, UUID donor, double amount, String companyName) {
     }
 }

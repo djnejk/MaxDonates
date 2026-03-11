@@ -1,9 +1,21 @@
 prefix: "&8[&4&l{#55ff55}M{#55ff77}a{#55ff99}x{#55ffbb}D{#55ffdd}o{#55ffff}n{#6aeaea}a{#80d5d5}t{#95bfbf}e{#aaaaaa}s&8]"
 
+help:
+  - "{prefix} &8» &7/maxdonates donate <hrac> <castka>"
+  - "{prefix} &8» &7/maxdonates cdonate <firma> <castka>"
+  - "{prefix} &8» &7/maxdonates company create <nazev>"
+  - "{prefix} &8» &7/maxdonates company remove <nazev>"
+  - "{prefix} &8» &7/maxdonates company list [hrac]"
+  - "{prefix} &8» &7/maxdonates company description <firma> edit/remove"
+  - "{prefix} &8» &7/maxdonates company give <firma> <hrac>"
+  - "{prefix} &8» &7/maxdonates description edit/remove"
+  - "{prefix} &8» &7/maxdonates recived [hrac|stranka]"
+  - "{prefix} &8» &7/maxdonates crecived <firma> [stranka]"
+
 messages:
   no-permission: "{prefix} &8» &cNa tohle nemas opravneni."
   error: "{prefix} &8» &cChyba: &7{error}"
-  cannot-self: "{prefix} &8» &cNemuzeš poslat donate sam sobe."
+  cannot-self: "{prefix} &8» &cNemuzes poslat donate sam sobe."
   not-enough: "{prefix} &8» &cNedostatek penez."
 
   usage-donate: "{prefix} &8» &7Usage: &f/maxdonates donate <hrac> <castka>"
@@ -45,3 +57,7 @@ messages:
   received-stats: " &8• &7Celkem: &a{total} &8| &7Dnes: &a{day} &8| &7Tyden: &a{week} &8| &7Mesic: &a{month} &8| &7Rok: &a{year}"
   received-line: " &8- &f{donor} &8» &a{amount} &8(&7{date}&8)"
   received-hover: "&7Celkem poslal: &a{sent_total}"
+
+  offline-report-header: "{prefix} &8» &eZatimco jsi byl offline, prisly ti nove donaty:"
+  offline-report-player: " &8- &7Na tvuj ucet: &a{total} &7od: &f{donors}"
+  offline-report-company: " &8- &7Na tve firmy: &a{total} &7od: &f{donors}"

@@ -11,13 +11,15 @@ Minecraft (Paper 1.20+) plugin pro posilani donatu mezi hraci a firmami pres Vau
 - Strankovani historie (nastavitelne v configu).
 - Hover informace u zaznamu hrace (`kolik donor celkem poslal`).
 - Ukladani dat do MySQL a automaticke vytvoreni tabulek.
+- Offline notifikace: pokud hrac obdrzi donate behem offline, po pripojeni dostane souhrn pro osobni ucet i firmy.
 - Podpora barevnych kodu `&` i hex `{#RRGGBB}`.
 
 ## Instalace
 1. Nahraj plugin jar do `plugins/MaxDonates`.
 2. Uprav `config.yml` (MySQL udaje).
-3. Ujisti se, ze server ma Vault a economy provider (EssentialsX apod.).
-4. Restart serveru.
+3. Uprav texty v `lang_cz.yml` (prefix, help, hlasky).
+4. Ujisti se, ze server ma Vault a economy provider (EssentialsX apod.).
+5. Restart serveru.
 
 ## Prikazy
 - `/maxdonates donate <hrac> <castka> [confirm]`
@@ -54,5 +56,4 @@ Minecraft (Paper 1.20+) plugin pro posilani donatu mezi hraci a firmami pres Vau
 
 ## Poznamky
 - Alias `compan` je podporeny stejne jako `company`.
-- Texty menis v `lang_cz.yml`.
-- Prefix i barevny styl je pripraven ve stejnem formatu jako jine pluginy (`&` + hex).
+- Help seznam i prefix jsou v `lang_cz.yml`.

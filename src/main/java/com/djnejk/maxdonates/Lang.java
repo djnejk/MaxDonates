@@ -4,15 +4,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Lang {
 
-    private final MaxDonates plugin;
-    private FileConfiguration config;
+    private final FileConfiguration config;
 
     public Lang(MaxDonates plugin, String fileName) {
-        this.plugin = plugin;
         File file = new File(plugin.getDataFolder(), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
@@ -29,5 +29,13 @@ public class Lang {
             msg = msg.replace("{" + entry.getKey() + "}", entry.getValue());
         }
         return msg;
+    }
+
+    public List<String> getList(String path) {
+        List<String> output = new ArrayList<>();
+        for (String raw : config.getStringList(path)) {
+            output.add(MessageUtils.colorize(raw.replace("{prefix}", config.getString("prefix", "")).replace("\\n", "\n")));
+        }
+        return output;
     }
 }

@@ -92,7 +92,7 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
             return;
         }
         eco.depositPlayer(target, amount);
-        plugin.getDatabaseManager().addPlayerDonation(player.getUniqueId(), target.getUniqueId(), amount);
+        plugin.getDatabaseManager().addPlayerDonation(player.getUniqueId(), target.getUniqueId(), amount, target.isOnline());
 
         player.sendMessage(plugin.getLang().get("messages.donate-sent", Map.of("target", args[1], "amount", format(amount))));
         if (target.isOnline()) {
@@ -135,7 +135,7 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
 
         OfflinePlayer owner = Bukkit.getOfflinePlayer(company.owner());
         eco.depositPlayer(owner, amount);
-        plugin.getDatabaseManager().addCompanyDonation(player.getUniqueId(), company.id(), company.owner(), amount);
+        plugin.getDatabaseManager().addCompanyDonation(player.getUniqueId(), company.id(), company.owner(), amount, owner.isOnline());
         player.sendMessage(plugin.getLang().get("messages.cdonate-sent", Map.of("company", company.name(), "amount", format(amount))));
     }
 
@@ -407,8 +407,8 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(Player player) {
-        for (String line : plugin.getConfig().getStringList("help")) {
-            player.sendMessage(MessageUtils.colorize(line));
+        for (String line : plugin.getLang().getList("help")) {
+            player.sendMessage(line);
         }
     }
 

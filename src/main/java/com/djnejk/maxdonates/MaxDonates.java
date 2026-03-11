@@ -33,6 +33,8 @@ public final class MaxDonates extends JavaPlugin {
             return;
         }
 
+        getServer().getPluginManager().registerEvents(new DonationNotificationListener(this), this);
+
         PluginCommand command = getCommand("maxdonates");
         if (command != null) {
             MaxDonatesCommand executor = new MaxDonatesCommand(this);
