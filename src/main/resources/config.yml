@@ -1,0 +1,27 @@
+prefix: "&8[&4&l{#55ff55}M{#55ff77}a{#55ff99}x{#55ffbb}D{#55ffdd}o{#55ffff}n{#6aeaea}a{#80d5d5}t{#95bfbf}e{#aaaaaa}s&8]"
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  database: "maxdonates"
+  user: "root"
+  password: "change_me"
+  params: "useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+
+company:
+  default-limit: 1
+
+history:
+  page-size: 10
+
+help:
+  - "{prefix} &8» &7/maxdonates donate <hrac> <castka>"
+  - "{prefix} &8» &7/maxdonates cdonate <firma> <castka>"
+  - "{prefix} &8» &7/maxdonates company create <nazev>"
+  - "{prefix} &8» &7/maxdonates company remove <nazev>"
+  - "{prefix} &8» &7/maxdonates company list [hrac]"
+  - "{prefix} &8» &7/maxdonates company description <firma> edit/remove"
+  - "{prefix} &8» &7/maxdonates company give <firma> <hrac>"
+  - "{prefix} &8» &7/maxdonates description edit/remove"
+  - "{prefix} &8» &7/maxdonates recived [hrac|stranka]"
+  - "{prefix} &8» &7/maxdonates crecived <firma> [stranka]"

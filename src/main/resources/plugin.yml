@@ -8,6 +8,41 @@ description: Donate system plugin
 depend: [Vault]
 
 commands:
-  test:
-    description: Ukaze tvuj balance
-    usage: /test
+  maxdonates:
+    description: Main command for MaxDonates
+    usage: /maxdonates
+    aliases: [md]
+
+permissions:
+  maxdonates.donate.player:
+    default: true
+  maxdonates.donate.company:
+    default: true
+  maxdonates.company.create:
+    default: true
+  maxdonates.company.create.*:
+    default: op
+  maxdonates.company.remove:
+    default: true
+  maxdonates.company.list.own:
+    default: true
+  maxdonates.company.list.other:
+    default: op
+  maxdonates.company.description.edit:
+    default: true
+  maxdonates.company.description.remove:
+    default: true
+  maxdonates.company.give:
+    default: true
+  maxdonates.description.edit:
+    default: true
+  maxdonates.description.remove:
+    default: true
+  maxdonates.lookup.player.own:
+    default: true
+  maxdonates.lookup.player.other:
+    default: op
+  maxdonates.lookup.company.own:
+    default: true
+  maxdonates.lookup.company.other:
+    default: op

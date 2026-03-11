@@ -8,18 +8,36 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class MaxDonates extends JavaPlugin {
 
     private Economy economy;
+    private DatabaseManager databaseManager;
+    private Lang lang;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        saveResource("lang_cz.yml", false);
+        this.lang = new Lang(this, "lang_cz.yml");
+
         if (!setupEconomy()) {
             getLogger().severe("Vault economy provider nebyl nalezen. Plugin se vypina.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        PluginCommand command = getCommand("test");
+        this.databaseManager = new DatabaseManager(this);
+        try {
+            databaseManager.connect();
+            databaseManager.createTables();
+        } catch (Exception ex) {
+            getLogger().severe("Nepodarilo se pripojit do MySQL: " + ex.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        PluginCommand command = getCommand("maxdonates");
         if (command != null) {
-            command.setExecutor(new TestCommand(this));
+            MaxDonatesCommand executor = new MaxDonatesCommand(this);
+            command.setExecutor(executor);
+            command.setTabCompleter(executor);
         }
 
         getLogger().info("MaxDonates plugin byl zapnut.");
@@ -27,6 +45,9 @@ public final class MaxDonates extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
         getLogger().info("MaxDonates plugin byl vypnut.");
     }
 
@@ -35,9 +56,7 @@ public final class MaxDonates extends JavaPlugin {
             return false;
         }
 
-        RegisteredServiceProvider<Economy> rsp =
-                getServer().getServicesManager().getRegistration(Economy.class);
-
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             return false;
         }
@@ -48,5 +67,13 @@ public final class MaxDonates extends JavaPlugin {
 
     public Economy getEconomy() {
         return economy;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public Lang getLang() {
+        return lang;
     }
 }
