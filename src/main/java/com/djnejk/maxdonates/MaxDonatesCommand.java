@@ -121,6 +121,10 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(plugin.getLang().get("messages.company-not-found"));
             return;
         }
+        if (company.owner().equals(player.getUniqueId())) {
+            player.sendMessage(plugin.getLang().get("messages.cannot-donate-own-company"));
+            return;
+        }
 
         Economy eco = plugin.getEconomy();
         if (!eco.has(player, amount)) {
@@ -414,8 +418,94 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) return List.of("donate", "cdonate", "company", "description", "recived", "crecived");
-        if (args.length == 2 && (args[0].equalsIgnoreCase("company") || args[0].equalsIgnoreCase("compan"))) return List.of("create", "remove", "list", "description", "give");
+        if (!(sender instanceof Player player)) {
+            return Collections.emptyList();
+        }
+
+        if (args.length == 1) {
+            return filterByStart(List.of("donate", "cdonate", "company", "description", "recived", "crecived"), args[0]);
+        }
+
+        String root = args[0].toLowerCase();
+        if (root.equals("donate")) {
+            if (args.length == 2) return filterByStart(onlinePlayerNames(player, true), args[1]);
+            if (args.length == 4) return filterByStart(List.of("confirm"), args[3]);
+        }
+
+        if (root.equals("cdonate")) {
+            if (args.length == 2) return filterByStart(companyNames(), args[1]);
+            if (args.length == 4) return filterByStart(List.of("confirm"), args[3]);
+        }
+
+        if (root.equals("recived") || root.equals("received")) {
+            if (args.length == 2) return filterByStart(onlinePlayerNames(player, false), args[1]);
+        }
+
+        if (root.equals("crecived") || root.equals("creceived")) {
+            if (args.length == 2) return filterByStart(companyNames(), args[1]);
+        }
+
+        if (root.equals("description")) {
+            if (args.length == 2) return filterByStart(List.of("edit", "remove"), args[1]);
+        }
+
+        if (root.equals("company") || root.equals("compan")) {
+            if (args.length == 2) return filterByStart(List.of("create", "remove", "list", "description", "give"), args[1]);
+
+            String sub = args[1].toLowerCase();
+            if (sub.equals("remove") && args.length == 3) return filterByStart(ownedCompanyNames(player.getUniqueId()), args[2]);
+            if (sub.equals("remove") && args.length == 4) return filterByStart(List.of("confirm"), args[3]);
+
+            if (sub.equals("list") && args.length == 3) return filterByStart(onlinePlayerNames(player, false), args[2]);
+
+            if (sub.equals("description") && args.length == 3) return filterByStart(ownedCompanyNames(player.getUniqueId()), args[2]);
+            if (sub.equals("description") && args.length == 4) return filterByStart(List.of("edit", "remove"), args[3]);
+
+            if (sub.equals("give") && args.length == 3) return filterByStart(ownedCompanyNames(player.getUniqueId()), args[2]);
+            if (sub.equals("give") && args.length == 4) return filterByStart(onlinePlayerNames(player, true), args[3]);
+            if (sub.equals("give") && args.length == 5) return filterByStart(List.of("confirm"), args[4]);
+        }
+
         return Collections.emptyList();
+    }
+
+    private List<String> onlinePlayerNames(Player viewer, boolean excludeSelf) {
+        List<String> names = new ArrayList<>();
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            if (excludeSelf && online.getUniqueId().equals(viewer.getUniqueId())) continue;
+            names.add(online.getName());
+        }
+        return names;
+    }
+
+    private List<String> companyNames() {
+        try {
+            return plugin.getDatabaseManager().getAllCompanyNames();
+        } catch (Exception ignored) {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<String> ownedCompanyNames(UUID owner) {
+        try {
+            List<String> names = new ArrayList<>();
+            for (DatabaseManager.Company company : plugin.getDatabaseManager().getCompaniesByOwner(owner)) {
+                names.add(company.name());
+            }
+            return names;
+        } catch (Exception ignored) {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<String> filterByStart(List<String> values, String input) {
+        String lower = input == null ? "" : input.toLowerCase();
+        List<String> filtered = new ArrayList<>();
+        for (String value : values) {
+            if (value.toLowerCase().startsWith(lower)) {
+                filtered.add(value);
+            }
+        }
+        return filtered;
     }
 }

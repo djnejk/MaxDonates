@@ -17,6 +17,7 @@ messages:
   error: "{prefix} &8» &cChyba: &7{error}"
   cannot-self: "{prefix} &8» &cNemuzes poslat donate sam sobe."
   not-enough: "{prefix} &8» &cNedostatek penez."
+  cannot-donate-own-company: "{prefix} &8» &cSve vlastni firme donate poslat nemuzes."
 
   usage-donate: "{prefix} &8» &7Usage: &f/maxdonates donate <hrac> <castka>"
   usage-cdonate: "{prefix} &8» &7Usage: &f/maxdonates cdonate <firma> <castka>"

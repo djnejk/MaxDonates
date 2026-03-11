@@ -141,6 +141,19 @@ public class DatabaseManager {
         }
     }
 
+
+    public List<String> getAllCompanyNames() throws SQLException {
+        String sql = "SELECT name FROM md_companies ORDER BY name";
+        List<String> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getString("name"));
+            }
+        }
+        return list;
+    }
+
     public List<Company> getCompaniesByOwner(UUID owner) throws SQLException {
         String sql = "SELECT id,name,owner_uuid,description FROM md_companies WHERE owner_uuid=? ORDER BY name";
         List<Company> list = new ArrayList<>();
