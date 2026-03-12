@@ -3,6 +3,7 @@ prefix: "&8[&4&l{#55ff55}M{#55ff77}a{#55ff99}x{#55ffbb}D{#55ffdd}o{#55ffff}n{#6a
 help:
   - "{prefix} &8» &7/maxdonates donate <hrac> <castka>"
   - "{prefix} &8» &7/maxdonates cdonate <firma> <castka>"
+  - "{prefix} &8» &7/maxdonates companies"
   - "{prefix} &8» &7/maxdonates company create <nazev>"
   - "{prefix} &8» &7/maxdonates company remove <nazev>"
   - "{prefix} &8» &7/maxdonates company list [hrac]"
@@ -52,6 +53,11 @@ messages:
 
   company-list-header: "{prefix} &8» &7Firmy hrace &f{player}&7:"
   company-list-line: " &8- &f{company} &8| &7{description}"
+
+  companies-header: "{prefix} &8» &7Seznam vsech firem (klikni pro predvyplneni cdonate):"
+  companies-line: " &8- &f{company}"
+  companies-hover: "&7Klikni pro doplneni: &f/maxdonates cdonate {company} <castka>"
+  companies-empty: "{prefix} &8» &7Zatim neni vytvorena zadna firma."
 
   received-header: "{prefix} &8» &7Donaty hrace &f{target} &8(&7stranka &f{page}&8)"
   creceived-header: "{prefix} &8» &7Donaty firmy &f{company} &8(&7stranka &f{page}&8)"

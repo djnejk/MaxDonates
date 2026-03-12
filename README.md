@@ -24,6 +24,7 @@ Minecraft (Paper 1.20+) plugin pro posilani donatu mezi hraci a firmami pres Vau
 ## Prikazy
 - `/maxdonates donate <hrac> <castka> [confirm]`
 - `/maxdonates cdonate <firma> <castka> [confirm]`
+- `/maxdonates companies`
 - `/maxdonates company create <nazev>`
 - `/maxdonates company remove <nazev> [confirm]`
 - `/maxdonates company list [hrac]`
@@ -40,6 +41,7 @@ Minecraft (Paper 1.20+) plugin pro posilani donatu mezi hraci a firmami pres Vau
 
 - `maxdonates.donate.player`
 - `maxdonates.donate.company`
+- `maxdonates.companies`
 - `maxdonates.company.create`
 - `maxdonates.company.create.<N>` (napr. `maxdonates.company.create.5`)
 - `maxdonates.company.create.*`

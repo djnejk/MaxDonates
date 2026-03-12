@@ -48,6 +48,7 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
                 case "description" -> handleProfileDescription(player, args);
                 case "recived", "received" -> handleReceived(player, args);
                 case "crecived", "creceived" -> handleCompanyReceived(player, args);
+                case "companies" -> handleCompanies(player);
                 default -> sendHelp(player);
             }
         } catch (Exception ex) {
@@ -365,6 +366,32 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+
+    private void handleCompanies(Player player) throws Exception {
+        if (!player.hasPermission("maxdonates.companies")) {
+            player.sendMessage(plugin.getLang().get("messages.no-permission"));
+            return;
+        }
+
+        List<String> companies = plugin.getDatabaseManager().getAllCompanyNames();
+        if (companies.isEmpty()) {
+            player.sendMessage(plugin.getLang().get("messages.companies-empty"));
+            return;
+        }
+
+        player.sendMessage(plugin.getLang().get("messages.companies-header"));
+        for (String company : companies) {
+            String suggest = "/maxdonates cdonate " + company + " ";
+            TextComponent line = new TextComponent(MessageUtils.colorize(
+                    plugin.getLang().get("messages.companies-line", Map.of("company", company))
+            ));
+            line.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, suggest));
+            line.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    new ComponentBuilder(MessageUtils.colorize(plugin.getLang().get("messages.companies-hover", Map.of("company", company)))).create()));
+            player.spigot().sendMessage(line);
+        }
+    }
+
     private void sendConfirm(Player player, String text, String command) {
         player.sendMessage(text);
         TextComponent component = new TextComponent(MessageUtils.colorize(plugin.getLang().get("messages.click-confirm")));
@@ -423,7 +450,7 @@ public class MaxDonatesCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return filterByStart(List.of("donate", "cdonate", "company", "description", "recived", "crecived"), args[0]);
+            return filterByStart(List.of("donate", "cdonate", "company", "companies", "description", "recived", "crecived"), args[0]);
         }
 
         String root = args[0].toLowerCase();

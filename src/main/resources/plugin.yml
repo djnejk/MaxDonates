@@ -19,6 +19,7 @@ permissions:
     children:
       maxdonates.donate.player: true
       maxdonates.donate.company: true
+      maxdonates.companies: true
       maxdonates.company.create: true
       maxdonates.company.create.*: true
       maxdonates.company.remove: true
@@ -37,6 +38,8 @@ permissions:
   maxdonates.donate.player:
     default: false
   maxdonates.donate.company:
+    default: false
+  maxdonates.companies:
     default: false
   maxdonates.company.create:
     default: false
