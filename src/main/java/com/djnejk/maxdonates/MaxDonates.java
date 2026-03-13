@@ -1,6 +1,7 @@
 package com.djnejk.maxdonates;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 
 import java.io.File;
@@ -21,6 +22,19 @@ public final class MaxDonates extends JavaPlugin {
             saveResource("lang_cz.yml", false);
         }
         this.lang = new Lang(this, "lang_cz.yml");
+
+        String version = getDescription().getVersion();
+        Bukkit.getLogger().info(" _____________________________________________________________");
+        Bukkit.getLogger().info("|    *                 (                                      |");
+        Bukkit.getLogger().info("|  (  `                )\\ )                        )          |");
+        Bukkit.getLogger().info("|  )\\))(      )     ) (()/(                  )  ( /(   (      |");
+        Bukkit.getLogger().info("| ((_)()\\  ( /(  ( /(  /(_))   (    (     ( /(  )\\()) ))\\ (   |");
+        Bukkit.getLogger().info("| (_()((_) )(_)) )\\())(_))_    )\\   )\\ )  )(_))(_))/ /((_))\\  |");
+        Bukkit.getLogger().info("| |  \\/  |((_)_ ((_)\\  |   \\  ((_) _(_/( ((_)_ | |_ (_)) ((_) |");
+        Bukkit.getLogger().info("| | |\\/| |/ _` |\\ \\ /  | |) |/ _ \\| ' \\))/ _` ||  _|/ -_)(_-< |");
+        Bukkit.getLogger().info("| |_|  |_|\\__,_|/_\\_\\  |___/ \\___/|_||_| \\__,_| \\__|\\___|/__/ |");
+        Bukkit.getLogger().info(String.format("%-36s", "| v" + version) + "by DjDevs.eu (@djnejk) ❤️ |");
+        Bukkit.getLogger().info("|_____________________________________________________________|");
 
         if (!setupEconomy()) {
             getLogger().severe("Vault economy provider nebyl nalezen. Plugin se vypina.");
