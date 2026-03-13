@@ -8,6 +8,64 @@ description: Donate system plugin
 depend: [Vault]
 
 commands:
-  test:
-    description: Ukaze tvuj balance
-    usage: /test
+  maxdonates:
+    description: Main command for MaxDonates
+    usage: /maxdonates
+    aliases: [md]
+
+permissions:
+  maxdonates.*:
+    default: op
+    children:
+      maxdonates.donate.player: true
+      maxdonates.donate.company: true
+      maxdonates.companies: true
+      maxdonates.company.create: true
+      maxdonates.company.create.*: true
+      maxdonates.company.remove: true
+      maxdonates.company.list.own: true
+      maxdonates.company.list.other: true
+      maxdonates.company.description.edit: true
+      maxdonates.company.description.remove: true
+      maxdonates.company.give: true
+      maxdonates.description.edit: true
+      maxdonates.description.remove: true
+      maxdonates.lookup.player.own: true
+      maxdonates.lookup.player.other: true
+      maxdonates.lookup.company.own: true
+      maxdonates.lookup.company.other: true
+
+  maxdonates.donate.player:
+    default: false
+  maxdonates.donate.company:
+    default: false
+  maxdonates.companies:
+    default: false
+  maxdonates.company.create:
+    default: false
+  maxdonates.company.create.*:
+    default: op
+  maxdonates.company.remove:
+    default: false
+  maxdonates.company.list.own:
+    default: false
+  maxdonates.company.list.other:
+    default: false
+  maxdonates.company.description.edit:
+    default: false
+  maxdonates.company.description.remove:
+    default: false
+  maxdonates.company.give:
+    default: false
+  maxdonates.description.edit:
+    default: false
+  maxdonates.description.remove:
+    default: false
+  maxdonates.lookup.player.own:
+    default: false
+  maxdonates.lookup.player.other:
+    default: false
+  maxdonates.lookup.company.own:
+    default: false
+  maxdonates.lookup.company.other:
+    default: false

@@ -1,0 +1,13 @@
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  database: "maxdonates"
+  user: "root"
+  password: "change_me"
+  params: "useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+
+company:
+  default-limit: 1
+
+history:
+  page-size: 10
